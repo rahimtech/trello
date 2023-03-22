@@ -1,0 +1,119 @@
+/*
+Theme Name: Rahimitheme
+Text Domain: RTL
+Version: 1.0
+Requires at least: 4.7
+Requires PHP: 5.2.4
+Description: best corporate theme for buisness
+Tags: blog, one-column, custom-background, custom-colors, custom-logo, custom-menu, editor-style, featured-images, footer-widgets, full-width-template, rtl-language-support-
+Author: Alireza Rahimi
+Author URI: https://rahimiblog.ir
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+* {
+  padding: 0px;
+  margin: 0px;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: yekan !important;
+}
+
+@font-face {
+  font-family: Vazir;
+  src: url('./font/Vazir.ttf') format('ttf');
+}
+@font-face {
+  font-family: yekan;
+
+  src: url('./font/iranyekanwebextrabold.woff') format('woff');
+}
+@font-face {
+  font-family: yekanreg;
+
+  src: url('./font/iranyekanwebregular.woff') format('woff');
+}
+h6,
+h5,
+h4,
+p,
+ul,
+a {
+  font-family: yekanreg;
+}
+
+.fontsmall {
+  font-size: 13px;
+}
+
+.bgheader {
+  background-color: #fef8e6 !important;
+}
+
+.customsizecard {
+  width: 620px;
+  background: #12ffd917;
+  border-radius: 10px;
+  padding: 30px;
+}
+
+.sizecard {
+  width: 270px;
+}
+.box {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.rahimiimage {
+  height: auto;
+  max-width: 100%;
+}
+.head {
+  display: flex;
+  justify-content: space-evenly;
+}
+.left {
+  align-self: center;
+}
+.left h3,
+h1,
+h5 {
+  line-height: 50px;
+}
+.colororang {
+  color: #fba02a;
+}
+.margintop {
+  margin-top: 100px;
+}
+.bg-grey-cus {
+  background-color: #0000000f !important;
+}
+.bold {
+  font-weight: 800;
+}
+.boximage {
+  max-width: 140px;
+  height: auto;
+  margin: 20px 40px 20px 40px;
+  border: 1px solid #5e5c5c;
+  border-radius: 8px;
+  padding: 2px;
+}
+.imageportfolio {
+  max-width: 100%;
+}
+
+.imgclick {
+  transition: 0.2s;
+  filter: grayscale(0);
+}
+.imgclick:hover {
+  filter: grayscale(0.5);
+}

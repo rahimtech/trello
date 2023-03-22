@@ -1,0 +1,55 @@
+/* @tailwind base; */
+@tailwind components;
+@tailwind utilities;
+
+@keyframes slide-right{
+  0%{
+    transform: translateX(-20%);
+    opacity: 0;
+  }
+  100%{
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@font-face {
+  font-family: yekan;
+
+  src: url('../font/iranyekanwebregular.woff') format('woff');
+}
+*{
+  font-family: yekan !important;
+  outline: none;
+}
+
+.animatedTask{
+  animation-name: slide-right;
+  animation: slide-right .3s ease-out;
+  /* transition: all .3s; */
+}
+.borderone{
+  border:1px solid
+}
+
+.imgListItem .imgListItemBar {
+  bottom: -61px;
+}
+
+.imgListItem:hover .imgListItemBar {
+  bottom: 0;
+}
+.minclass {
+  min-width: 0px !important;
+}
+
+input {
+  background-color: transparent;
+  border: 0px solid;
+  height: 20px;
+  width: 160px;
+  color: #CCC;
+}
+.rtl{
+  direction: rtl !important;
+}

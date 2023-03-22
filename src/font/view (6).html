@@ -1,0 +1,490 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><?php echo $idea->name_fa; ?> | EaseUp | ایزاپ</title>
+	<meta name="description" content="<?php echo addslashes($idea->summary); ?>">
+	<link rel="stylesheet" href="<?php echo CSS; ?>index.min.css<?php echo CSS_VERSION; ?>">
+	<link rel="stylesheet" href="<?php echo CSS; ?>main.min.css<?php echo CSS_VERSION; ?>">
+	<link rel="stylesheet" href="<?php echo CSS ?>testing.css<?php echo CSS_VERSION ?>">
+	<style>
+		.row select {
+			width: 100%;
+		}
+
+		.site-a {
+			color: blue;
+			direction: ltr;
+			width: calc(100% - 120px);
+			background-color: #eceaf2;
+			margin: auto;
+			padding: 8px 11px;
+		}
+
+		.social-a {
+			color: blue;
+			direction: ltr;
+			width: calc(100% - 120px);
+			background-color: #eceaf2;
+			margin: auto;
+			padding: 8px 11px;
+		}
+
+		@media only screen and (max-width: 560px) {
+			section#photos .photoContainer {
+				width: 300px;
+			}
+
+			.searchcontent {
+				font-size: 17px;
+			}
+
+			.searchcontent a {
+				margin: 7px;
+			}
+
+			.social-a {
+				width: 100%;
+			}
+
+			.site-a {
+				width: 100%;
+			}
+
+			section#generalInfo .row select {
+				width: 100%;
+			}
+
+			section#generalInfo .row input {
+				width: 100%;
+			}
+
+			section#generalInfo .row label {
+				width: unset;
+				margin-left: unset;
+			}
+
+			section#generalInfo .row {
+				margin: unset;
+				width: 100%;
+				display: block;
+				height: unset;
+			}
+
+			#View #logoIdea #logoContainer {
+				position: static;
+				width: 250px;
+				height: 250px;
+			}
+
+			section {
+				padding: 20px 0px;
+			}
+
+			#View #logoIdea #logoContainer .circleSecondary {
+				display: none;
+			}
+
+			#View #logoIdea #logoContainer .circlePrimary {
+				display: none;
+			}
+
+			#View #logoIdea #logoContainer img {
+				width: 250px;
+				height: 250px;
+			}
+
+			section#photos .photoContainer {
+				margin: 5px;
+			}
+
+			section#photos {
+				width: min-content;
+			}
+
+			section#evaluation .row .card {
+				margin: auto;
+			}
+		}
+
+		#picPrev {
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			position: fixed;
+			z-index: 10;
+			background-color: rgba(0, 0, 0, .8);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		#picPrev img {
+			object-fit: contain;
+			width: 100%;
+			max-width: 800px;
+			max-height: 100%;
+		}
+
+		#verified {
+			width: 30px;
+			position: relative;
+			top: 4px;
+		}
+	</style>
+</head>
+
+<body>
+	<style>
+		.tooltip {
+			position: relative;
+			display: inline-block;
+		}
+
+		.tooltip .tooltiptext {
+			visibility: hidden;
+			top: 100%;
+			left: 50%;
+			width: 120px;
+			margin-left: -60px;
+			background-color: black;
+			color: #fff;
+			text-align: center;
+			padding: 5px 0;
+			border-radius: 6px;
+			position: absolute;
+			z-index: 1;
+		}
+
+		.tooltip:hover .tooltiptext {
+			visibility: visible;
+		}
+	</style>
+
+	<div id="View" style="background-image:none;">
+		<?php require_once "includes/searchBar.php" ?>
+
+
+		<section id="logo">
+			<div id="logoIdea">
+				<div id="logoContainer">
+					<div class="circleSecondary circle"></div>
+					<div class="circlePrimary circle"></div>
+					<img src="<?php echo CDN_IMG . $idea->logo; ?>" alt="<?php echo $idea->name_en; ?>" class="logo" id="prevLogo">
+				</div>
+				<h1 id="title"> <?php echo $idea->name_fa ?>
+					<?php if ($idea->misc->verified) { ?>
+						<span>
+							<img src="/assets/img/verified.png" id="verified" title="<?php echo $idea->name_fa ?> توسط صاحب کسب و کار تایید شده است" alt="verified">
+						</span>
+					<?php } ?>
+				</h1>
+
+				<div id="nationality">
+					<span class="<?php echo $idea->misc->nationality == 1 ? "iranian" : "foreign"; ?>">
+						<?php echo $idea->misc->nationality == 1 ? "ایرانی" : "خارجی"; ?>
+					</span>
+				</div>
+				<br>
+				<div class="searchcontent">
+					<a href="#evaluation">ارزیابی کسب و کار</a>|<a href="#description">شرح کسب و کار</a> </a>|<a href="#generalInfo">اطلاعات کسب و کار</a>
+				</div>
+			</div>
+
+
+		</section>
+
+		<section id="generalInfo" style="margin-top: -100px;">
+			<h2 style="font-family:vazirBold; font-size: 30px;">
+				اطلاعات کلی
+			</h2>
+			<div class="row">
+				<label for="inputName">
+					نام کسب و کار
+				</label>
+				<input disabled type="text" name="name_fa" id="inputName" placeholder="" value="<?php echo $idea->name_fa ?>">
+			</div>
+			<div class="row">
+				<label for="inputNameEn">
+					نام لاتین
+				</label>
+				<input disabled type="text" name="name_en" id="inputNameEn" placeholder="" style="direction: ltr;" value="<?php echo $idea->name_en ?>">
+			</div>
+			<div class="row">
+				<label for="inputSlogan">
+					هدف/شعار
+				</label>
+				<input disabled type="text" name="slogan" id="inputSlogan" placeholder="" value="<?php echo $idea->slogan ?>">
+			</div>
+			<div class="row">
+				<label for="inputField">
+					زمینه فعالیت
+				</label>
+				<!-- <input type="text" name="field" id="inputField" placeholder="فروشگاه اینترنتی ، شبکه اجتماعی ، ..."> -->
+				<select name="field" disabled style="color:black;">
+					<?php foreach ($categories as $category) {
+						if ($category['id'] == $idea->field) { ?>
+							<option selected value="<?php echo $category['id']; ?>"><?php echo $category['title'] ?></option>
+						<?php continue;
+						} ?>
+
+					<?php } ?>
+				</select>
+			</div>
+			<div class="row">
+				<label for="inputSummary">
+					خلاصه
+				</label>
+				<input disabled type="text" name="summary" id="inputSummary" placeholder="" value="<?php echo $idea->summary ?>">
+			</div>
+			<div class="row">
+				<label for="inputFounded">
+					سال ساخت
+				</label>
+				<input disabled type="text" name="founded" id="inputFounded" placeholder="" value="<?php echo $idea->founded ?>">
+			</div>
+			<div class=" row">
+				<label for="inputFounders">
+					بنیان گذار
+				</label>
+				<input disabled type="text" name="founders" id="inputFounders" placeholder="" value="<?php echo $idea->founders ?>">
+			</div>
+			<div class="row">
+				<label for="inputCEO">
+					مدیر عامل
+				</label>
+				<input disabled type="text" name="ceo" id="inputCEO" placeholder="" value="<?php echo $idea->CEO ?>">
+			</div>
+			<div class="row">
+				<label for="inputLocation">
+					کشور/شهر
+				</label>
+				<input disabled type="text" name="location" id="inputLocation" placeholder="" value="<?php echo $idea->location; ?>">
+			</div>
+			<div class="row">
+				<label for="inputWebsite">
+					وبسایت رسمی
+				</label>
+				<div class="site-a">
+					<a href="<?php if ($idea->misc->website) {
+									echo $idea->misc->website;
+								} ?>"><?php if ($idea->misc->website) {
+											echo $idea->misc->website;
+										} ?>
+					</a> </div>
+			</div>
+			<div class="row">
+				<label for="inputSocial">
+					شبکه اجتماعی
+				</label>
+				<div class="social-a">
+
+					<?php if ($idea->misc->social) {
+						$social = explode(',', $idea->misc->social);
+
+						foreach ($social as $link) { ?>
+							<a href="<?php echo $link; ?>">
+								<?php
+								echo $link;
+								?>
+							</a>
+					<?php }
+					} else {
+						echo "داده ای وجود ندارد";
+					} ?>
+				</div>
+
+			</div>
+		</section>
+
+		<section id="description">
+			<h2 style="font-family:vazirBold; font-size: 30px;">
+				شرح کسب و کار
+			</h2>
+			<div id="inputDesc" style="text-align: justify; white-space: pre-wrap;"><?php echo $idea->desc ?></div>
+		</section>
+
+		<!--<section id="photos">-->
+		<!--	<div class="photoContainer">-->
+		<!--		<?php if ($idea->photos[0]) { ?>-->
+		<!--			<img src="<?php echo CDN_IMG . $idea->photos[0] ?>" alt="<?php echo $idea->name_fa . '-' . $idea->name_en ?>" class="photo" id="prevPhoto1">-->
+		<!--		<?php } else { ?>-->
+		<!--			<img src="<?php echo IMG; ?>addPhoto.png" alt="photo 1" class="photo" id="prevPhoto1">-->
+		<!--		<?php } ?>-->
+
+		<!--		<label for="inputPhoto1"></label>-->
+		<!--	</div>-->
+		<!--	<div class="photoContainer">-->
+		<!--		<?php if ($idea->photos[1]) { ?>-->
+		<!--			<img src="<?php echo CDN_IMG . $idea->photos[1] ?>" alt="<?php echo $idea->name_fa . '-' . $idea->name_en ?>" class="photo" id="prevPhoto2">-->
+		<!--		<?php } else { ?>-->
+		<!--			<img src="<?php echo IMG; ?>addPhoto.png" alt="photo 2" class="photo" id="prevPhoto2">-->
+		<!--		<?php } ?>-->
+
+		<!--		<label for="inputPhoto2"></label>-->
+		<!--	</div>-->
+		<!--	<div class="photoContainer">-->
+		<!--		<?php if ($idea->photos[2]) { ?>-->
+		<!--			<img src="<?php echo CDN_IMG . $idea->photos[2] ?>" alt="<?php echo $idea->name_fa . '-' . $idea->name_en ?>" class="photo" id="prevPhoto3">-->
+		<!--		<?php } else { ?>-->
+		<!--			<img src="<?php echo IMG; ?>addPhoto.png" alt="photo 3" class="photo" id="prevPhoto3">-->
+		<!--		<?php } ?>-->
+
+		<!--		<label for="inputPhoto3"></label>-->
+		<!--	</div>-->
+		<!--</section>-->
+
+		<section id="evaluation">
+			<h2 style="font-family:vazirBold; font-size: 30px;">
+				ارزیابی کسب و کار
+			</h2>
+			<div class="row">
+				<div class="card users">
+					<label for="inputUsers">
+						تعداد کاربران
+						<span class="tooltip">
+						<span style="color: blue;">(i)</span>
+							<span class="tooltiptext"><?php echo $idea->misc->nationality == 2 ? "براساس آمارهای کانال های ارتباطی در درباره ما یا سایت کسبوکار" : "براساس آمارهای درون سایت کسبوکار یا میزان نصب اپلیکیشن کسبوکار"; ?></span>
+						
+						</span>
+					</label>
+					<input disabled type="text" name="users" id="inputUsers" placeholder="خالی" value="<?php echo $idea->users ?>">
+				</div>
+				<div class="card staff">
+					<label for="inputStaff">
+						تعداد کارمندان
+						<span class="tooltip">
+						<span style="color: blue;">(i)</span>
+							<span class="tooltiptext"><?php echo $idea->misc->nationality == 2 ? "براساس آمارهای کانال های ارتباطی در درباره ما یا سایت کسبوکار" : "براساس آمارهای کانال های ارتباطی در درباره ما یا سایت کسبوکار"; ?></span>
+						
+						</span>
+						
+					</label>
+					<input disabled type="text" name="staff" id="inputStaff" placeholder="خالی" value="<?php echo $idea->staff ?>">
+				</div>
+				<div class="card rank">
+					<label for="inputRank">
+						<?php echo $idea->misc->nationality == 2 ? "رتبه در جهان" : "رتبه در ایران"; ?>
+						<span class="tooltip">
+							<span style="color: blue;">(i)</span>
+							<span class="tooltiptext"><?php echo $idea->misc->nationality == 2 ? "بر اساس رتبه الکسا" : "بر اساس رتبه الکسا در ایران"; ?></span>
+						</span>
+					</label>
+
+					<input disabled type="text" name="rank" id="inputRank" placeholder="خالی" value="<?php echo $idea->rank ?>">
+				</div>
+				<div class="card value">
+					<label for="inputValue">
+						<?php echo $idea->misc->nationality == 2 ? "ارزش فعلی ( دلار )" : "ارزش ( میلیون تومان )"; ?>
+						<span class="tooltip">
+							<span style="color: blue;">(i)</span>
+							<span class="tooltiptext">
+<?php echo $idea->misc->nationality == 2 ? "بر اساس آمار های ویکی پدیا یا لینکدین یا استارتاپ رنکینگ" : "بر اساس آمار های کانال های ارتباطی در درباره ما"; ?>
+</span>
+	</span>
+					</label>
+					<input disabled type="text" name="value" id="inputValue" placeholder="خالی" value="<?php echo $idea->value ?>">
+				</div>
+			</div>
+		</section>
+
+		<div class="container">
+			<div id="tags">
+				<div id="tagsFa" class="tagContainer">
+					<?php foreach (explode('-', trim($idea->tags_fa)) as $tag) { ?>
+						<a href="https://www.easeup.ir/q/<?php echo addslashes(str_replace(' ', '-', trim($tag))) ?>" class="tag tagFa">
+							<?php echo $tag ?>
+						</a>
+					<?php } ?>
+					<?php foreach (explode('-', trim($idea->tags_en)) as $tag) { ?>
+						<a href="https://www.easeup.ir/q/<?php echo addslashes(str_replace(' ', '-', trim($tag))) ?>" class="tag tagEn">
+							<?php echo $tag ?>
+						</a>
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+
+		<div class="container" style="font-size: 12px; opacity: .5;">
+			نوشته شده توسط:
+			<?php echo $made_by; ?>
+			</br>
+			آخرین بازنگری:
+			<?php echo lastModified($idea->lastUpdated); ?>
+		</div>
+
+		<div class="dlg dlgSm" id="claimDlg">
+			<div class="mask" onclick="hideDlg(event)"></div>
+			<div class="dlgChild" onclick="hideDlg(event)" style="text-align: justify;">
+				با سلام و احترام در صورتی که تمایل دارید تا
+				کسب و کار شما تیک احراز هویت را دریافت نماید و به
+				عنوان کسبوکاری شناخته بشوید که نمایه تان را تایید
+				کرده اید از طریق ایمیل رسمی سایتتان به ایمیل
+				verified@easeup.ir
+				با موضوع احرازهویت و در پیام آدرس صفحه در
+				ایزاپ+نام کاربری خودتان را برای انتقال مالکیت
+				ثبت کنید تا در اسرع وقت در صورت درست بودن اطلاعات
+				به شما تیک احرازهویت داده شود و یا میتوانید از طریق حساب
+				اینستاگرامی خود ( که رسمی از شما باشد ) به
+				@easeup
+				پیام بدهید و در پیام خود صفحه کسب و کار+نام کاربری
+				خود را در ایزاپ به همراه موضوع احرازهویت مشخص کنید .
+			</div>
+		</div>
+
+
+		<?php require_once "includes/footer.php" ?>
+	</div>
+
+
+
+
+	<!-- <div class="f" style="direction: ltr;"><a target="blank" href="<?php if ($idea->misc->website) {
+																			echo $idea->misc->website;
+																		} ?>"><?php if ($idea->misc->website) {
+																					echo $idea->misc->website;
+																				} ?></a></div>
+		</div>
+		<div class="row">
+			<label for="inputSocial">
+				شبکه های اجتماعی
+			</label>
+			<div class="f" style="direction: ltr;"><a target="blank" href="<?php if ($idea->misc->social) {
+																				echo $idea->misc->social;
+																			} ?>"><?php if ($idea->misc->social) {
+																						echo $idea->misc->social;
+																					} ?></a></div>
+		</div> -->
+
+	<div id="openPhotoContainer"></div>
+
+
+	<script src="<?php echo JS ?>search.js<?php echo JS_VERSION ?>"></script>
+	<!-- <script src="<?php echo JS ?>view.js<?php echo JS_VERSION ?>"></script> -->
+	<script src="<?php echo JS ?>auth.js<?php echo JS_VERSION ?>"></script>
+	<script>
+		const searchBarLeft = document.querySelector('#searchBar .left')
+		let btn = document.createElement('div')
+		// This little bitch doesn't work =\ , Too bad!
+		// btn.setAttribute({
+		// 	class: 'btn btnPrimary',
+		// 	id: 'btnClaim',
+		// 	onclick: 'handleClaim()'
+		// })
+		btn.setAttribute('class', 'btn btnPrimary')
+		btn.setAttribute('id', 'btnClaim')
+		btn.setAttribute('onclick', 'showDlg("claimDlg")')
+
+		btn.innerText = 'مالک این کسب و کارم'
+
+		searchBarLeft.prepend(btn)
+		// console.log('prepend success')
+	</script>
+
+</body>
+
+</html>
