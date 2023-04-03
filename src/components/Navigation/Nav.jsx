@@ -9,9 +9,12 @@ import Fade from "@mui/material/Fade";
 import Backdrop from "@mui/material/Backdrop";
 import { Input } from "reactstrap";
 import Axios from "axios";
+import { Routes, Route } from "react-router-dom";
 
 import { useContext } from "react";
 import UserContext from "../Context/UserContext";
+import { Link } from "react-router-dom";
+//import Targets from "../Target/Targets";
 
 const style = {
   position: "absolute",
@@ -36,7 +39,20 @@ const Nav = () => {
   const [showlog, setShowLog] = useState("");
   const [showlogIn, setShowLogIn] = useState("");
   const [showlogDes, setShowLogDes] = useState(false);
+  const [showTargetToggle, setShowTargetToggle] = useState(false);
   const con = useContext(UserContext);
+
+  const generalSetTarget = (check) => {
+    if (check) {
+      con.setShowTarget(true);
+      setShowTargetToggle(true);
+      return;
+    } else {
+      con.setShowTarget(false);
+      setShowTargetToggle(false);
+      return;
+    }
+  };
 
   const ValidPass = () => {
     if (password === checkpass) {
@@ -152,12 +168,28 @@ const Nav = () => {
   };
 
   return (
-    <div>
+    <div className="z-30">
       <div className="flex flex-wrap p-3 justify-between shadow-md items-center bg-slate-200 mb-3 md:fixed md:mx-16  md:mt-3 left-0 right-0 ">
         <div className="flex">
           <ColorButton />
           <span className="ml-3">
             <Board />
+          </span>
+          <span className="ml-3">
+            <Button
+              onClick={() => generalSetTarget(true)}
+              className={`${showTargetToggle ? `!hidden` : `!block`}`}
+              variant="contained"
+            >
+              اهداف
+            </Button>
+            <Button
+              onClick={() => generalSetTarget(false)}
+              className={`${showTargetToggle ? `!block` : `!hidden`}`}
+              variant="contained"
+            >
+              اهداف
+            </Button>
           </span>
         </div>
         <div

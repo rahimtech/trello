@@ -135,7 +135,7 @@ export const Column = ({ column, columnId, index, colId }) => {
                             {
                               id: uuid(),
                               content: "New Task",
-                              boardId: con.board,
+                              boardId: con.preBoard,
                             },
                             columnId
                           )

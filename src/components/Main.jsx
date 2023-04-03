@@ -10,6 +10,7 @@ import Nav from "./Navigation/Nav";
 import Axios from "axios";
 import { json } from "react-router-dom";
 import { Logout } from "@mui/icons-material";
+import Targets from "./Target/Targets";
 
 const itemsFromBackend = [
   {
@@ -133,10 +134,12 @@ const onDragStart = (result) => {
 function Main() {
   const [columns, setColumns] = useState(columnsFromBackend);
   const [columnIdSend, setColumnId] = useState();
-  const [board, setMainBoard] = useState(mainBoard[0].idBoard);
+  const [board, setMainBoard] = useState(mainBoard);
+  const [preBoard, setPreMainBoard] = useState(mainBoard[0].idBoard);
   const [color, setColor] = useState("red");
   const [colorback, setColorBack] = useState("!bg-blue-500");
   const [username, setUsername] = useState("");
+  const [showTarget, setShowTarget] = useState(false);
   const [email, setEmail] = useState("");
 
   // const [columnBtnId, setcolumnBtnId] = useState({
@@ -145,19 +148,22 @@ function Main() {
   // });
   const [sizeArea, setSizeArea] = useState("");
 
-  // useEffect(() => {
-  //   const getColumns = JSON.parse(localStorage.getItem("columns"));
-  //   const getBackColor = JSON.parse(localStorage.getItem("colorback"));
-  //   if (getColumns || getBackColor) {
-  //     setColumns(getColumns);
-  //     setColorBack(getBackColor);
-  //   }
-  // }, []);
+  useEffect(() => {
+    const getColumns = JSON.parse(localStorage.getItem("columns"));
+    const getBackColor = JSON.parse(localStorage.getItem("colorback"));
+    const getBoard = JSON.parse(localStorage.getItem("board"));
+    if (getColumns || getBackColor || getBoard) {
+      setColumns(getColumns);
+      setColorBack(getBackColor);
+      setMainBoard(getBoard);
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   localStorage.setItem("columns", JSON.stringify(columns));
-  //   localStorage.setItem("colorback", JSON.stringify(colorback));
-  // }, [columns, colorback]);
+  useEffect(() => {
+    localStorage.setItem("columns", JSON.stringify(columns));
+    localStorage.setItem("colorback", JSON.stringify(colorback));
+    localStorage.setItem("board", JSON.stringify(board));
+  }, [columns, colorback, board]);
 
   const addTask = (task, columnId) => {
     // setcolumnBtnId({
@@ -171,7 +177,7 @@ function Main() {
       [columnId]: {
         name: columns[columnId].name,
         items: newColumn,
-        boardId: board,
+        boardId: preBoard,
       },
     };
 
@@ -285,82 +291,74 @@ function Main() {
           logInUser,
           columnIdSend,
           mainBoard,
+          preBoard,
+          setPreMainBoard,
+          showTarget,
+          setShowTarget,
         }}
       >
         <Nav />
         {/* <button onClick={logOutUser}>out</button> */}
-        {/* <div className="bg-yellow-300 w-full">
-          <hr className="mt-5 " />
-          <h3 className="text-center">
-            این پروژه در حال ساخت است و تکمیل نیست آخرین آپدیت 14 دی 1401
-          </h3>
-          <hr className="mb-5 " />
+        <div className={`${showTarget ? `block` : `hidden`}`}>
+          <Targets />
         </div>
-        <div className="bg-green-300 w-full">
-          <hr className="mt-5 " />
-          <h4 className="text-center mt-2">
-            موارد پر استفاده و مهم در پروژه ترلو :
-          </h4>
-          <h5 className="text-center ">
-            Programming: JavaScript / FrameWork: React / Dragging:
-            React-Beautiful-dnd / CSS: Tailwind / Design: Mui
-          </h5>
-          <hr className="mb-5 " />
-        </div> */}
-
-        <DragDropContext
-          onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
-          onDragStart={(result) => onDragStart(result)}
-          // onDragUpdate={(result) => onDragStart(result)}
-        >
-          <Droppable
-            droppableId="all-columns"
-            direction="horizontal"
-            type="column"
+        <div className={`${showTarget ? `hidden` : `block`}`}>
+          <DragDropContext
+            onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
+            onDragStart={(result) => onDragStart(result)}
+            // onDragUpdate={(result) => onDragStart(result)}
           >
-            {(provided) => {
-              return (
-                <div
-                  style={{ display: "flex" }}
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  className="md:mt-24"
-                >
-                  {Object.entries(columns).map(([columnId, column], index) => {
-                    if (column.boardId === board) {
-                      setColumnId(columnId);
-                      return (
-                        <InnerList
-                          key={columnId}
-                          columnId={columnId}
-                          column={column}
-                          index={index}
-                        />
-                      );
-                    }
-                  })}
-
-                  {provided.placeholder}
-                  <div className=" !p-7 ">
-                    <button
-                      className="w-40 mt-3 h-11 rounded-md border-none shadow-lg outline-none cursor-pointer"
-                      onClick={() =>
-                        addColumn({
-                          id: uuid(),
-                          name: "ستون جدید",
-                          items: [],
-                          boardId: board,
-                        })
+            <Droppable
+              droppableId="all-columns"
+              direction="horizontal"
+              type="column"
+            >
+              {(provided) => {
+                return (
+                  <div
+                    style={{ display: "flex" }}
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    className="md:mt-24"
+                  >
+                    {Object.entries(columns).map(
+                      ([columnId, column], index) => {
+                        if (column.boardId === preBoard) {
+                          setColumnId(columnId);
+                          return (
+                            <InnerList
+                              key={columnId}
+                              columnId={columnId}
+                              column={column}
+                              index={index}
+                            />
+                          );
+                        }
                       }
-                    >
-                      ستون جدید
-                    </button>
+                    )}
+
+                    {provided.placeholder}
+                    <div className=" !p-7 ">
+                      <button
+                        className="w-40 mt-3 h-11 rounded-md border-none shadow-lg outline-none cursor-pointer"
+                        onClick={() =>
+                          addColumn({
+                            id: uuid(),
+                            name: "ستون جدید",
+                            items: [],
+                            boardId: preBoard,
+                          })
+                        }
+                      >
+                        ستون جدید
+                      </button>
+                    </div>
                   </div>
-                </div>
-              );
-            }}
-          </Droppable>
-        </DragDropContext>
+                );
+              }}
+            </Droppable>
+          </DragDropContext>
+        </div>
       </UserContext.Provider>
     </div>
   );

@@ -59,7 +59,7 @@ export default function Board() {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [nameBoardShow, setNameBoardShow] = useState(
-    `${con.mainBoard[0].nameBoard}`
+    `${con.board[0].nameBoard}`
   );
   const open = Boolean(anchorEl);
 
@@ -71,7 +71,7 @@ export default function Board() {
     if (setBoardId === null) {
     } else {
       setNameBoardShow(setBoardName);
-      con.setMainBoard(setBoardId);
+      con.setPreMainBoard(setBoardId);
 
       // con.setColumns({ ...con.columns });
     }
@@ -79,29 +79,32 @@ export default function Board() {
   };
 
   const delBoard = (id) => {
-    if (con.mainBoard.length <= 1) {
+    if (con.board.length <= 1) {
       return;
     }
-    con.mainBoard.find((item, index) => {
+    con.board.find((item, index) => {
       if (item.idBoard == id) {
-        const remv = con.mainBoard.indexOf(con.mainBoard[index]);
+        const remv = con.board.indexOf(con.board[index]);
         if (remv > -1) {
-          con.mainBoard.splice(remv, 1);
+          con.board.splice(remv, 1);
 
-          setNameBoardShow(con.mainBoard[0].nameBoard);
-          con.setMainBoard(item.idBoard);
+          setNameBoardShow(con.board[0].nameBoard);
+          con.setPreMainBoard(item.idBoard);
+          con.setMainBoard([...con.board]);
+          console.log("con.board: ", con.board);
         }
       }
     });
   };
 
   const addBoard = (setIdBoard, setNameNewBoard) => {
-    const endNameBoard = setNameNewBoard + con.mainBoard.length;
-    con.mainBoard.push({
+    const endNameBoard = setNameNewBoard + con.board.length;
+    con.board.push({
       nameBoard: endNameBoard,
       idBoard: setIdBoard,
     });
-    con.setMainBoard(setIdBoard);
+    con.setMainBoard([...con.board]);
+    con.setPreMainBoard(setIdBoard);
     setNameBoardShow(endNameBoard);
   };
 
@@ -152,7 +155,7 @@ export default function Board() {
         onClose={() => handleClose(null)}
         className="rtl"
       >
-        {Object.entries(con.mainBoard).map((item, index) => {
+        {Object.entries(con.board).map((item, index) => {
           return <InnerList item={item} index={index} />;
         })}
 
