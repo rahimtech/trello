@@ -10,7 +10,8 @@ import Backdrop from "@mui/material/Backdrop";
 import { Input } from "reactstrap";
 import Axios from "axios";
 import { Routes, Route } from "react-router-dom";
-
+import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from "@mui/icons-material/Close";
 import { useContext } from "react";
 import UserContext from "../Context/UserContext";
 import { Link } from "react-router-dom";
@@ -39,19 +40,50 @@ const Nav = () => {
   const [showlog, setShowLog] = useState("");
   const [showlogIn, setShowLogIn] = useState("");
   const [showlogDes, setShowLogDes] = useState(false);
-  const [showTargetToggle, setShowTargetToggle] = useState(false);
+  const [valueBoard, setValueBoard] = useState("");
+  const [flag, setFlag] = useState(false);
+  // const [showTargetToggle, setShowTargetToggle] = useState(false);
   const con = useContext(UserContext);
+  // const generalSetTarget = (check) => {
+  //   if (check) {
+  //     con.setShowTarget(true);
+  //     setShowTargetToggle(true);
+  //     return;
+  //   } else {
+  //     con.setShowTarget(false);
+  //     setShowTargetToggle(false);
+  //     return;
+  //   }
+  // };
 
-  const generalSetTarget = (check) => {
-    if (check) {
-      con.setShowTarget(true);
-      setShowTargetToggle(true);
-      return;
-    } else {
-      con.setShowTarget(false);
-      setShowTargetToggle(false);
-      return;
+  // let searchIndexBoard = () => {
+  //   con.board.map((item, index) => {
+  //     console.log("item.idBoard: ", con.item.indexOf(item.idBoard));
+  //     console.log("con.preBoard: ", con.preBoard);
+
+  //     if (item.idBoard == con.preBoard) {
+  //       setSaveIndex(index);
+  //       console.log("saveIndex:ششششش ", saveIndex);
+  //     }
+  //   });
+  // };
+
+  const checkValueBoardFunc = (e, g, f) => {
+    if (f & g) {
+      setValueBoard(e);
+      setFlag(true);
+    } else if (f || g) {
+      con.board[con.giveIndex].nameBoard = valueBoard;
+      con.setNameBoardShow(valueBoard);
+      con.setMainBoard([...con.board]);
+      setFlag(false);
+    } else if (!f && !g) {
+      setFlag(false);
     }
+  };
+
+  const blurInput = (e) => {
+    e.target.value = null;
   };
 
   const ValidPass = () => {
@@ -176,20 +208,48 @@ const Nav = () => {
             <Board />
           </span>
           <span className="ml-3">
-            <Button
-              onClick={() => generalSetTarget(true)}
-              className={`${showTargetToggle ? `!hidden` : `!block`}`}
-              variant="contained"
+            <Link className="no-underline" to="/targets">
+              <Button
+                // onClick={() => generalSetTarget(true)}
+                // className={`${showTargetToggle ? `!hidden` : `!block`}`}
+                variant="contained"
+              >
+                اهداف
+              </Button>
+              {/* <Button
+                onClick={() => generalSetTarget(false)}
+                className={`${showTargetToggle ? `!block` : `!hidden`}`}
+                variant="contained"
+              >
+                اهداف
+              </Button> */}
+            </Link>
+          </span>
+          <span className="ml-3 mt-1 items-center flex">
+            <input
+              className="border-solid border-b-2 text-black border-gray-400"
+              placeholder={`${con.nameBoardShow}`}
+              onChange={(e) => checkValueBoardFunc(e.target.value, true, true)}
+              onBlur={(e) => blurInput(e)}
+            />
+            <div
+              className={`${
+                flag ? `block` : `hidden`
+              } rounded-md w-fit text-center text-white flex`}
             >
-              اهداف
-            </Button>
-            <Button
-              onClick={() => generalSetTarget(false)}
-              className={`${showTargetToggle ? `!block` : `!hidden`}`}
-              variant="contained"
-            >
-              اهداف
-            </Button>
+              <div
+                className="text-green-700 hover:cursor-pointer"
+                onClick={() => checkValueBoardFunc(valueBoard, true, false)}
+              >
+                <DoneIcon />
+              </div>
+              <div
+                className="text-red-700  hover:cursor-pointer"
+                onClick={() => checkValueBoardFunc("", false, false)}
+              >
+                <CloseIcon />
+              </div>
+            </div>
           </span>
         </div>
         <div

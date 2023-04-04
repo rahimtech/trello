@@ -7,14 +7,15 @@ import StepContent from "@mui/material/StepContent";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import UserContext from "../Context/UserContext";
-import { useContext, useState } from "react";
+import { useState } from "react";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { Link } from "react-router-dom";
 
 export default function Targets() {
-  const con = useContext(UserContext);
+  const y = JSON.parse(localStorage.getItem("board"));
 
   const [activeStep, setActiveStep] = useState(0);
-  const [step, setStep] = useState(con.board);
+  const [step, setStep] = useState(y);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -29,12 +30,19 @@ export default function Targets() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen mt-24">
+    <div className="flex justify-center items-center min-h-screen bg-yellow-200">
+      <dvi className="absolute top-0 left-0 ml-3 mt-4">
+        <Link className="no-underline" to="/">
+          <Button variant="contained" startIcon={<ArrowBackIosNewIcon />}>
+            برگشت
+          </Button>
+        </Link>
+      </dvi>
       <Box sx={{ maxWidth: 400 }}>
         <Stepper activeStep={activeStep} orientation="vertical">
           {step.map((step, index) => {
             return (
-              <Step key={step.nameBoard}>
+              <Step key={step.idBoard}>
                 <StepLabel
                   optional={
                     index === 2 ? (
@@ -45,7 +53,7 @@ export default function Targets() {
                   {step.nameBoard}
                 </StepLabel>
                 <StepContent>
-                  <Typography>{step.idBoard}</Typography>
+                  {/* <Typography>{step.idBoard}</Typography> */}
                   <Box sx={{ mb: 2 }}>
                     <div>
                       <Button
@@ -73,7 +81,9 @@ export default function Targets() {
         </Stepper>
         {activeStep === step.length && (
           <Paper square elevation={0} sx={{ p: 3 }} className="!rounded-xl ">
-            <Typography>دمت گرم به همه اهدافت رسیدی</Typography>
+            <Typography className="!font-extrabold">
+              دمت گرم به همه اهدافت رسیدی
+            </Typography>
             <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
               ریست
             </Button>

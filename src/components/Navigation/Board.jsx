@@ -58,21 +58,19 @@ export default function Board() {
   const con = useContext(UserContext);
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [nameBoardShow, setNameBoardShow] = useState(
-    `${con.board[0].nameBoard}`
-  );
+
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (setBoardId, setBoardName) => {
+  const handleClose = (setBoardId, setBoardName, setIndex) => {
     if (setBoardId === null) {
     } else {
-      setNameBoardShow(setBoardName);
+      con.setNameBoardShow(setBoardName);
       con.setPreMainBoard(setBoardId);
-
+      con.setGiveIndex(setIndex);
       // con.setColumns({ ...con.columns });
     }
     setAnchorEl(null);
@@ -88,10 +86,10 @@ export default function Board() {
         if (remv > -1) {
           con.board.splice(remv, 1);
 
-          setNameBoardShow(con.board[0].nameBoard);
-          con.setPreMainBoard(item.idBoard);
+          con.setNameBoardShow(con.board[0].nameBoard);
+          con.setGiveIndex(0);
+          con.setPreMainBoard(con.board[0].idBoard);
           con.setMainBoard([...con.board]);
-          console.log("con.board: ", con.board);
         }
       }
     });
@@ -99,13 +97,15 @@ export default function Board() {
 
   const addBoard = (setIdBoard, setNameNewBoard) => {
     const endNameBoard = setNameNewBoard + con.board.length;
+    const numBoradIndex = con.board.length;
     con.board.push({
       nameBoard: endNameBoard,
       idBoard: setIdBoard,
     });
     con.setMainBoard([...con.board]);
+    con.setGiveIndex(numBoradIndex);
     con.setPreMainBoard(setIdBoard);
-    setNameBoardShow(endNameBoard);
+    con.setNameBoardShow(endNameBoard);
   };
 
   const InnerList = memo(({ item, index }) => {
@@ -121,7 +121,11 @@ export default function Board() {
           className="w-full"
           key={index}
           onClick={() =>
-            handleClose(`${item[1].idBoard}`, `${item[1].nameBoard}`)
+            handleClose(
+              `${item[1].idBoard}`,
+              `${item[1].nameBoard}`,
+              `${index}`
+            )
           }
           disableRipple
         >
@@ -143,7 +147,7 @@ export default function Board() {
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon />}
       >
-        {nameBoardShow}
+        {con.nameBoardShow}
       </Button>
       <StyledMenu
         id="demo-customized-menu"

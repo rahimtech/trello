@@ -139,8 +139,18 @@ function Main() {
   const [color, setColor] = useState("red");
   const [colorback, setColorBack] = useState("!bg-blue-500");
   const [username, setUsername] = useState("");
-  const [showTarget, setShowTarget] = useState(false);
+  const [giveIndex, setGiveIndex] = useState(0);
+  // const [showTarget, setShowTarget] = useState(false);
   const [email, setEmail] = useState("");
+
+  const y = JSON.parse(localStorage.getItem("board"));
+  let w = "null";
+  if (y === null) {
+    w = board[0].nameBoard;
+  } else {
+    w = y[0].nameBoard;
+  }
+  const [nameBoardShow, setNameBoardShow] = useState(`${w}`);
 
   // const [columnBtnId, setcolumnBtnId] = useState({
   //   item: "",
@@ -293,72 +303,68 @@ function Main() {
           mainBoard,
           preBoard,
           setPreMainBoard,
-          showTarget,
-          setShowTarget,
+          nameBoardShow,
+          setNameBoardShow,
+          giveIndex,
+          setGiveIndex,
         }}
       >
         <Nav />
         {/* <button onClick={logOutUser}>out</button> */}
-        <div className={`${showTarget ? `block` : `hidden`}`}>
-          <Targets />
-        </div>
-        <div className={`${showTarget ? `hidden` : `block`}`}>
-          <DragDropContext
-            onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
-            onDragStart={(result) => onDragStart(result)}
-            // onDragUpdate={(result) => onDragStart(result)}
-          >
-            <Droppable
-              droppableId="all-columns"
-              direction="horizontal"
-              type="column"
-            >
-              {(provided) => {
-                return (
-                  <div
-                    style={{ display: "flex" }}
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className="md:mt-24"
-                  >
-                    {Object.entries(columns).map(
-                      ([columnId, column], index) => {
-                        if (column.boardId === preBoard) {
-                          setColumnId(columnId);
-                          return (
-                            <InnerList
-                              key={columnId}
-                              columnId={columnId}
-                              column={column}
-                              index={index}
-                            />
-                          );
-                        }
-                      }
-                    )}
 
-                    {provided.placeholder}
-                    <div className=" !p-7 ">
-                      <button
-                        className="w-40 mt-3 h-11 rounded-md border-none shadow-lg outline-none cursor-pointer"
-                        onClick={() =>
-                          addColumn({
-                            id: uuid(),
-                            name: "ستون جدید",
-                            items: [],
-                            boardId: preBoard,
-                          })
-                        }
-                      >
-                        ستون جدید
-                      </button>
-                    </div>
+        <DragDropContext
+          onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
+          onDragStart={(result) => onDragStart(result)}
+          // onDragUpdate={(result) => onDragStart(result)}
+        >
+          <Droppable
+            droppableId="all-columns"
+            direction="horizontal"
+            type="column"
+          >
+            {(provided) => {
+              return (
+                <div
+                  style={{ display: "flex" }}
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  className="md:mt-24"
+                >
+                  {Object.entries(columns).map(([columnId, column], index) => {
+                    if (column.boardId === preBoard) {
+                      setColumnId(columnId);
+                      return (
+                        <InnerList
+                          key={columnId}
+                          columnId={columnId}
+                          column={column}
+                          index={index}
+                        />
+                      );
+                    }
+                  })}
+
+                  {provided.placeholder}
+                  <div className=" !p-7 ">
+                    <button
+                      className="w-40 mt-3 h-11 rounded-md border-none shadow-lg outline-none cursor-pointer"
+                      onClick={() =>
+                        addColumn({
+                          id: uuid(),
+                          name: "ستون جدید",
+                          items: [],
+                          boardId: preBoard,
+                        })
+                      }
+                    >
+                      ستون جدید
+                    </button>
                   </div>
-                );
-              }}
-            </Droppable>
-          </DragDropContext>
-        </div>
+                </div>
+              );
+            }}
+          </Droppable>
+        </DragDropContext>
       </UserContext.Provider>
     </div>
   );
